@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using TestOkta7.Authentication
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+
+<PageTitle>TestOkta7</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4 bg-secondary">
+            <AuthorizeView>
+                <Authorized>
+                    <a class="text-white" @onclick="Logout" href="javascript:void(0)">Logout</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="text-white" href="/login">Login</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code{
+    private async Task Logout()
+    {
+        var customAuthProvider = (AuthenticationProvider)authStateProvider;
+        await customAuthProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/login", true);
+    }
+}

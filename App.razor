@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <NotAuthorized>
+                <h1>Você não tem autorização para visualizar esta página</h1>
+            </NotAuthorized>
+            <Authorizing>
+                Autenticação em progresso...
+            </Authorizing>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Não encontrado</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Desculpe, não há nada nesse endereço.</p>
+        </LayoutView>
+    </NotFound>
+</Router>

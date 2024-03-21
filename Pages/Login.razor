@@ -1,0 +1,60 @@
+﻿@page "/"
+@page "/login"
+@using TestOkta7.Helper
+@using TestOkta7.Authentication
+@inject UserService userService
+@inject IJSRuntime js
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 border">
+        <div class="mb-3 text-center">
+            <h3>Login</h3>
+        </div>
+        <div class="mb-3">
+            <label>E-mail</label>
+            <input @bind="model.Email" class="form-control" placeholder="E-mail" />
+        </div>
+        <div class="mb-3">
+            <label>Senha</label>
+            <input @bind="model.Password" type="password" class="form-control" placeholder="Senha" />
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button @onclick="Authenticate" class="btn btn-primary">Entrar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private class Model
+    {
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
+    }
+
+    private Model model = new();
+
+    private async Task Authenticate()
+    {
+        var userAccount = userService.GetByEmail(model.Email);
+        if (userAccount == null)
+        {
+            await js.InvokeVoidAsync("alert", "Usuário com o e-mail informado não encontrado");
+            return;
+        }
+        if (userAccount.Password != model.Password.Hash())
+        {
+            await js.InvokeVoidAsync("alert", "Senha incorreta");
+            return;
+        }
+
+        var customAuthProvider = (AuthenticationProvider)authStateProvider;
+        await customAuthProvider.UpdateAuthenticationState(new UserSession
+            {
+                UserName = userAccount.Name
+            });
+        navManager.NavigateTo("/home", true);
+    }
+}
