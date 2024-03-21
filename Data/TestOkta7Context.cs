@@ -21,7 +21,7 @@ namespace TestOkta7.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string conn = "Server=rubik.cqxvbrhqbcwv.us-east-1.rds.amazonaws.com;Database=Atgp;User Id=atgpdev;Password=!4TGP@WSXcde3!";
+            string conn = "[COLE SUA STRING DE CONEXÃO COM UM BANCO SQL SERVER AQUI]";
 
             optionsBuilder.UseSqlServer(conn);
 
@@ -37,10 +37,6 @@ namespace TestOkta7.Data
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
             });
-
-            //OnModelCreatingPartial(modelBuilder);
         }
-
-        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
